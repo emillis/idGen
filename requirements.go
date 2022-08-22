@@ -1,9 +1,5 @@
 package idGen
 
-import (
-	"strings"
-)
-
 //===========[STATIC]====================================================================================================
 
 var defaultRequirements = Requirements{
@@ -36,35 +32,26 @@ type Requirements struct {
 	Encoder
 }
 
-func (c *Requirements) adjustLength(s string) string {
-	if len(s) < c.Length {
-		return c.adjustLength(s + c.applyComposition(enc.Encode(s)))
+func (r *Requirements) adjustLength(s string) string {
+	if len(s) < r.Length {
+		return r.adjustLength(s + r.applyComposition(r.Encode(s)))
 	}
 
-	return s[:c.Length]
+	return s[:r.Length]
 }
-func (c *Requirements) applyAllowedCase(s string) string {
-	switch c.AllowedCase {
-	case UpperOnly:
-		return strings.ToUpper(s)
-	case LowerOnly:
-		return strings.ToLower(s)
+func (r *Requirements) applyAllowedCase(s string) string {
+	if r.AllowedCase == nil {
+		return s
 	}
 
-	return s
+	return r.AllowedCase(s)
 }
-func (c *Requirements) applyComposition(s string) string {
-
-	switch c.Composition {
-	case AlphaOnly:
-		return alphaOnly.ReplaceAllString(s, "")
-	case AlphanumericOnly:
-		return alphanumericOnly.ReplaceAllString(s, "")
-	case NumericOnly:
-		return numericOnly.ReplaceAllString(s, "")
+func (r *Requirements) applyComposition(s string) string {
+	if r.Composition == nil {
+		return s
 	}
 
-	return s
+	return r.Composition(s)
 }
 
 //===========[FUNCTIONALITY]====================================================================================================
