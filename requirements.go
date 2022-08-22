@@ -2,6 +2,7 @@ package idGen
 
 //===========[STATIC]====================================================================================================
 
+//defaultRequirements defines Requirements that will be used by default
 var defaultRequirements = Requirements{
 	Length:      64,
 	Salt:        "[156vs/d1ce5_35c=t+RF&^£$fDFS5RV45_;_31dfv1r4w5(}]})e6f1d1\\5sdD@5we(fE\",fe3s5EF]",
@@ -34,6 +35,7 @@ type Requirements struct {
 	Encoder
 }
 
+//adjustLength adjusts string length based on Requirements
 func (r *Requirements) adjustLength(s string) string {
 	if len(s) < r.Length {
 		return r.adjustLength(s + r.Composition(r.Encode(s)))
