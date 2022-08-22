@@ -3,9 +3,11 @@ package idGen
 //===========[STATIC]====================================================================================================
 
 var defaultRequirements = Requirements{
-	Length:  64,
-	Salt:    "[156vs/d1ce5_35c=t+RF&^£$fDFS5RV45_;_31dfv1r4w5(}]})e6f1d1\\5sdD@5we(fE\",fe3s5EF]",
-	Encoder: newSha512Encoder(),
+	Length:      64,
+	Salt:        "[156vs/d1ce5_35c=t+RF&^£$fDFS5RV45_;_31dfv1r4w5(}]})e6f1d1\\5sdD@5we(fE\",fe3s5EF]",
+	AllowedCase: func(s string) string { return s },
+	Composition: func(s string) string { return s },
+	Encoder:     newSha512Encoder(),
 }
 
 //===========[STRUCTS]====================================================================================================
@@ -34,24 +36,10 @@ type Requirements struct {
 
 func (r *Requirements) adjustLength(s string) string {
 	if len(s) < r.Length {
-		return r.adjustLength(s + r.applyComposition(r.Encode(s)))
+		return r.adjustLength(s + r.Composition(r.Encode(s)))
 	}
 
 	return s[:r.Length]
-}
-func (r *Requirements) applyAllowedCase(s string) string {
-	if r.AllowedCase == nil {
-		return s
-	}
-
-	return r.AllowedCase(s)
-}
-func (r *Requirements) applyComposition(s string) string {
-	if r.Composition == nil {
-		return s
-	}
-
-	return r.Composition(s)
 }
 
 //===========[FUNCTIONALITY]====================================================================================================
@@ -71,6 +59,14 @@ func makeRequirementsReasonable(r *Requirements) *Requirements {
 		r.Salt = defaultRequirements.Salt
 	}
 
+	if r.AllowedCase == nil {
+		r.AllowedCase = defaultRequirements.AllowedCase
+	}
+
+	if r.Composition == nil {
+		r.Composition = defaultRequirements.Composition
+	}
+
 	if r.Encoder == nil {
 		r.Encoder = defaultRequirements.Encoder
 	}
@@ -80,5 +76,5 @@ func makeRequirementsReasonable(r *Requirements) *Requirements {
 
 //applyRequirements applies Requirements supplied to the string supplied
 func applyRequirements(s string, r *Requirements) string {
-	return r.applyAllowedCase(r.adjustLength(r.applyComposition(s)))
+	return r.AllowedCase(r.adjustLength(r.Composition(s)))
 }
