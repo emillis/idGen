@@ -9,58 +9,58 @@ func TestStatic(t *testing.T) {
 	salt := "156vs/d1ce5_35ctRF&^£$fDFS5RV4531dfv1r4w5e6f1d1\\5sdD5we(fE\",fe3s5EF"
 
 	tests := []struct {
-		cfg  Config
+		cfg  Requirements
 		want string
 	}{
 		{
-			Config{64, salt, "", ""},
+			Requirements{64, salt, nil, nil, nil},
 			"NwiKlYB4xFOeEc5Fy-0I4NGCg0nvTWWRc-aAftaZ9KUTjVN5n1RAcYr23CEFm-Mr",
 		},
 		{
-			Config{64, salt, LowerOnly, ""},
+			Requirements{64, salt, LowerOnly, nil, nil},
 			"nwiklyb4xfoeec5fy-0i4ngcg0nvtwwrc-aaftaz9kutjvn5n1racyr23cefm-mr",
 		},
 		{
-			Config{64, salt, UpperOnly, ""},
+			Requirements{64, salt, UpperOnly, nil, nil},
 			"NWIKLYB4XFOEEC5FY-0I4NGCG0NVTWWRC-AAFTAZ9KUTJVN5N1RACYR23CEFM-MR",
 		},
 
 		{
-			Config{64, salt, "", AlphaOnly},
+			Requirements{64, salt, nil, AlphaOnly, nil},
 			"NwiKlYBxFOeEcFyINGCgnvTWWRcaAftaZKUTjVNnRAcYrCEFmMrwxOcDBJryYZKT",
 		},
 		{
-			Config{64, salt, LowerOnly, AlphaOnly},
+			Requirements{64, salt, LowerOnly, AlphaOnly, nil},
 			"nwiklybxfoeecfyingcgnvtwwrcaaftazkutjvnnracyrcefmmrwxocdbjryyzkt",
 		},
 		{
-			Config{64, salt, UpperOnly, AlphaOnly},
+			Requirements{64, salt, UpperOnly, AlphaOnly, nil},
 			"NWIKLYBXFOEECFYINGCGNVTWWRCAAFTAZKUTJVNNRACYRCEFMMRWXOCDBJRYYZKT",
 		},
 
 		{
-			Config{64, salt, "", NumericOnly},
+			Requirements{64, salt, nil, NumericOnly, nil},
 			"4504095123896559496345396855855513224654178015435189919615859574",
 		},
 		{
-			Config{64, salt, LowerOnly, NumericOnly},
+			Requirements{64, salt, LowerOnly, NumericOnly, nil},
 			"4504095123896559496345396855855513224654178015435189919615859574",
 		},
 		{
-			Config{64, salt, UpperOnly, NumericOnly},
+			Requirements{64, salt, UpperOnly, NumericOnly, nil},
 			"4504095123896559496345396855855513224654178015435189919615859574",
 		},
 
 		{
-			Config{64, salt, "", AlphanumericOnly},
+			Requirements{64, salt, nil, AlphanumericOnly, nil},
 			"NwiKlYB4xFOeEc5Fy0I4NGCg0nvTWWRcaAftaZ9KUTjVN5n1RAcYr23CEFmMrwxO",
 		},
 		{
-			Config{64, salt, LowerOnly, AlphanumericOnly},
+			Requirements{64, salt, LowerOnly, AlphanumericOnly, nil},
 			"nwiklyb4xfoeec5fy0i4ngcg0nvtwwrcaaftaz9kutjvn5n1racyr23cefmmrwxo",
 		},
 		{
-			Config{64, salt, UpperOnly, AlphanumericOnly},
+			Requirements{64, salt, UpperOnly, AlphanumericOnly, nil},
 			"NWIKLYB4XFOEEC5FY0I4NGCG0NVTWWRCAAFTAZ9KUTJVN5N1RACYR23CEFMMRWXO",
 		},
 	}
@@ -79,7 +79,7 @@ func TestRandom(t *testing.T) {
 	output := make(map[string]string)
 
 	for i := 0; i < 20; i++ {
-		got := Random(&Config{desiredIDLength, "", "", ""})
+		got := Random(&Requirements{desiredIDLength, "", nil, nil, nil})
 		gotLen := len(got)
 
 		if gotLen != desiredIDLength {
