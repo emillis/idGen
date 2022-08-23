@@ -22,6 +22,9 @@ type Requirements struct {
 	//You can read more about salting here: https://en.wikipedia.org/wiki/Salt_(cryptography)
 	Salt string
 
+	//If marked as true, the salt is not used by default
+	OmitSalt bool
+
 	//ID generated can be all upper case or all lower case if needed. By default,
 	//the ID returned will be a mixture of upper and lower case characters.
 	AllowedCase AllowedCase
@@ -57,7 +60,7 @@ func makeRequirementsReasonable(r *Requirements) *Requirements {
 		r.Length = defaultRequirements.Length
 	}
 
-	if r.Salt == "" {
+	if r.Salt == "" && !r.OmitSalt {
 		r.Salt = defaultRequirements.Salt
 	}
 
